@@ -20,22 +20,22 @@ public class GenresController : Controller
     }
 
     // GET: GENRES/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
+    //public async Task<IActionResult> Details(int? id)
+    //{
+    //    if (id == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        var genre = await _context.Genres
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (genre == null)
-        {
-            return NotFound();
-        }
+    //    var genre = await _context.Genres
+    //        .FirstOrDefaultAsync(m => m.Id == id);
+    //    if (genre == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        return View(genre);
-    }
+    //    return View(genre);
+    //}
 
     // GET: GENRES/Create
     public IActionResult Create()
