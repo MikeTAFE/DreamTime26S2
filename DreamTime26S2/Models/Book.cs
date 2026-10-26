@@ -6,9 +6,9 @@ namespace DreamTime26S2.Models
 {
     public class Book
     {
-        // TODO: Add regex (10 or 13 digits) to ISBN validation
         [Key]
         [MaxLength(13)]
+        [RegularExpression(@"^(\d{10}|\d{13})$", ErrorMessage = "Must be a 10- or 13-digit ISBN")]
         public required string ISBN { get; set; }
 
         [Required]
