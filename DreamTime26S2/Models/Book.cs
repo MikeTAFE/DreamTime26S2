@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DreamTime26S2.Models
 {
@@ -10,6 +11,10 @@ namespace DreamTime26S2.Models
         [MaxLength(13)]
         [RegularExpression(@"^(\d{10}|\d{13})$", ErrorMessage = "Must be a 10- or 13-digit ISBN")]
         public required string ISBN { get; set; }
+
+        [NotMapped]
+        [DisplayName("ISBN")]
+        public string ISBNFormatted { get => ISBN.Length == 10 ? ISBN : $"{ISBN.Substring(0, 3)}-{ISBN.Substring(3)}"; }
 
         [Required]
         [StringLength(100, MinimumLength = 2)]
