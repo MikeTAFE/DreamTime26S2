@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DreamTime26S2.Models;
 using DreamTime26S2.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class BooksController : Controller
 {
@@ -39,6 +40,8 @@ public class BooksController : Controller
     // GET: Books/Create
     public IActionResult Create()
     {
+        // Get a list of genres from the DB
+        ViewData["GenreList"] = new SelectList(_context.Genres, "Id", "Name");
         return View();
     }
 
@@ -49,12 +52,36 @@ public class BooksController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("ISBN,Title,Author,Pages,Description,ImageFilename,Copies,Publisher,DatePublished,Edition,Genre,GenreId")] Book book)
     {
+        // Turn genre ID into a Genre object
+        Genre? genre = await _context.Genres.FindAsync(book.GenreId);
+
+        // Check if genre does not exist and throw 404 error (or something nicer)
+        if (genre == null)
+        {
+            // Return 404 error (very bad UX)
+            //return NotFound("Oi, cut it out! Stop messing with the genre ID!");
+
+            // Nicer option: return a custom validation error message
+            ModelState.AddModelError("GenreId", "Genre doesn't exist.");
+        }
+
+        //// OPTION 1: Assign genre object to the book and then revalidate the model
+        //book.Genre = genre;
+        //ModelState.Clear();
+        //TryValidateModel(book);
+
+        // OPTION 2: Remove/ignore validation for ONLY the Genre property
+        ModelState.Remove("Genre");
+
         if (ModelState.IsValid)
         {
             _context.Add(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // Get a list of genres from the DB
+        ViewData["GenreList"] = new SelectList(_context.Genres, "Id", "Name");
         return View(book);
     }
 
