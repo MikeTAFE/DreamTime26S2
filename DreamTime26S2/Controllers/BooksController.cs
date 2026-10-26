@@ -4,6 +4,7 @@ using DreamTime26S2.Models;
 using DreamTime26S2.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+[Route("[controller]/[action]/{isbn?}")]
 public class BooksController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -86,6 +87,7 @@ public class BooksController : Controller
     }
 
     // GET: Books/Edit/5
+    //[HttpGet("/[controller]/[action]/{isbn?}")]
     public async Task<IActionResult> Edit(string? isbn)
     {
         if (isbn == null)
