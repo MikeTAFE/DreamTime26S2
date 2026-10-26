@@ -1,17 +1,25 @@
 @model IEnumerable<DreamTime26S2.Models.Book>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage books";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Add book</a>
 </p>
-<table class="table">
+
+<table class="table manage-books-table">
+    <caption>List of books to manage</caption>
     <thead>
         <tr>
+            <th>
+                Image
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISBN)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -19,77 +27,56 @@
                 @Html.DisplayNameFor(model => model.Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageFilename)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Copies)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Publisher)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.DatePublished)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Edition)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Genre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GenreId)
+                @Html.DisplayNameFor(model => model.Copies)
             </th>
-            <th></th>
+            <th aria-label="Actions: edit, details, delete"></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Pages)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ImageFilename)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Copies)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Publisher)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DatePublished)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Edition)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.GenreId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-isbn="@item.ISBN">Edit</a> |
-                <a asp-action="Details" asp-route-isbn="@item.ISBN">Details</a> |
-                <a asp-action="Delete" asp-route-isbn="@item.ISBN">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @* @Html.DisplayFor(modelItem => item.ImageFilename) *@
+                    @* Load the book image thumbnail or default image (if unavailable) *@
+                    <partial name="_BookImagePartial" model="item" />
+                </td>
+                <td class="text-nowrap">
+                    @Html.DisplayFor(modelItem => item.ISBNFormatted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatePublished)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copies)
+                </td>
+                <td class="text-nowrap">
+                    <a asp-action="Edit" asp-route-isbn="@item.ISBN" class="btn btn-sm btn-outline-primary" aria-label="Edit" title="Edit">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a asp-action="Details" asp-route-isbn="@item.ISBN" class="btn btn-sm btn-outline-secondary" aria-label="Details" title="Details">
+                        <i class="bi bi-book-half"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-isbn="@item.ISBN" class="btn btn-sm btn-outline-danger" aria-label="Delete" title="Delete">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

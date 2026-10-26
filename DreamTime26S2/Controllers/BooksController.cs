@@ -17,7 +17,8 @@ public class BooksController : Controller
     // GET: Books
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Books.ToListAsync());
+        // Include genres with books
+        return View(await _context.Books.Include(b => b.Genre).ToListAsync());
     }
 
     // GET: Books/Details/5

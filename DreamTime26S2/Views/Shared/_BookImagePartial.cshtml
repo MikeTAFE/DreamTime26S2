@@ -1,0 +1,20 @@
+﻿@model Book
+
+@{
+    // Path to the book image directory
+    string imagePath = "wwwroot/images/books";
+}
+
+@* Check if book image exists *@
+@if (File.Exists($"{imagePath}/{Model.ImageFilename}"))
+{
+    <img src="~/images/books/@Model.ImageFilename"
+         alt="Cover image for @Model.Title"
+         class="book-image" />
+}
+else
+{
+    <img src="~/images/image-placeholder.png"
+         alt="Placeholder image"
+         class="book-image" />
+}
