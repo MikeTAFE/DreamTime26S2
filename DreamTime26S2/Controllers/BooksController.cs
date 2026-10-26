@@ -90,16 +90,19 @@ public class BooksController : Controller
     //[HttpGet("/[controller]/[action]/{isbn?}")]
     public async Task<IActionResult> Edit(string? isbn)
     {
-        if (isbn == null)
-        {
-            return NotFound();
-        }
+        // No ID, no result
+        if (isbn == null) return BadRequest("Must provide an ISBN.");
 
+        // Look up book in DB
         var book = await _context.Books.FindAsync(isbn);
-        if (book == null)
-        {
-            return NotFound();
-        }
+
+        // Check if ISBN exists
+        if (book == null) return NotFound("ISBN not found.");
+
+        // Get a list of genres from the DB
+        ViewData["GenreList"] = new SelectList(_context.Genres, "Id", "Name");
+
+        // Display form with book data
         return View(book);
     }
 
@@ -110,48 +113,62 @@ public class BooksController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(string? isbn, [Bind("ISBN,Title,Author,Pages,Description,ImageFilename,Copies,Publisher,DatePublished,Edition,Genre,GenreId")] Book book)
     {
-        if (isbn != book.ISBN)
-        {
-            return NotFound();
-        }
+        // Check if ISBN in URL does not match ISBN in Book data
+        if (isbn != book.ISBN) return BadRequest("ISBNs do not match");
 
+        // Turn genre ID into a Genre object
+        Genre? genre = await _context.Genres.FindAsync(book.GenreId);
+
+        // Check if genre does not exist and display error
+        if (genre == null) ModelState.AddModelError("GenreId", "Genre doesn't exist.");
+
+        // Assign genre to book
+        //book.Genre = genre;
+
+        // Check model is valid before update
         if (ModelState.IsValid)
         {
             try
             {
+                // Try to update DB
                 _context.Update(book);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
+                // DB exception on update - check if book does not exist
                 if (!BookExists(book.ISBN))
                 {
                     return NotFound();
                 }
                 else
                 {
+                    // Not sure what the problem is, rethrow the exception (someone else's problem...)
                     throw;
                 }
             }
+
+            // Redirect user back to Index listing
             return RedirectToAction(nameof(Index));
         }
+
+        // Get a list of genres from the DB
+        ViewData["GenreList"] = new SelectList(_context.Genres, "Id", "Name");
+
+        // Display form with book data (and error messages)
         return View(book);
     }
 
     // GET: Books/Delete/5
     public async Task<IActionResult> Delete(string? isbn)
     {
-        if (isbn == null)
-        {
-            return NotFound();
-        }
+        // No ID, no result
+        if (isbn == null) return BadRequest("Must provide an ISBN.");
+
 
         var book = await _context.Books
             .FirstOrDefaultAsync(m => m.ISBN == isbn);
-        if (book == null)
-        {
-            return NotFound();
-        }
+        if (book == null) return NotFound("Book not found.");
 
         return View(book);
     }
@@ -165,9 +182,9 @@ public class BooksController : Controller
         if (book != null)
         {
             _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
