@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace DreamTime26S2.Models
@@ -27,6 +28,7 @@ namespace DreamTime26S2.Models
 
         [StringLength(100)]
         [DataType(DataType.ImageUrl)]
+        [DisplayName("Image (filename)")]
         public string? ImageFilename { get; set; }
 
         [Required]
@@ -38,6 +40,7 @@ namespace DreamTime26S2.Models
 
         [Required]
         [DataType(DataType.Date)]
+        [DisplayName("Date Published")]
         public DateOnly DatePublished { get; set; }
 
         [StringLength(20)]
@@ -45,11 +48,12 @@ namespace DreamTime26S2.Models
 
 
         // Links/relationships/associations to other entities
-        [Required]
         [DeleteBehavior(DeleteBehavior.Restrict)]  // Stops cascade delete action - can also use NoAction (same in SQL Server)
-        public required Genre Genre { get; set; }
+        public Genre? Genre { get; set; }
 
-        public int GenreId { get; set; }  // Foreign key to Genre - if not specifed, EF will automatically create a field/column
+        [Required]
+        [DisplayName("Genre")]
+        public required int GenreId { get; set; }  // Foreign key to Genre - if not specifed, EF will automatically create a field/column
 
     }
 }
