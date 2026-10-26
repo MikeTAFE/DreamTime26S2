@@ -24,17 +24,14 @@ public class BooksController : Controller
     // GET: Books/Details/5
     public async Task<IActionResult> Details(string? isbn)
     {
-        if (isbn == null)
-        {
-            return NotFound();
-        }
+        if (isbn == null) return BadRequest("Must provide an ISBN.");
 
+        // Get book with genre
         var book = await _context.Books
-            .FirstOrDefaultAsync(m => m.ISBN == isbn);
-        if (book == null)
-        {
-            return NotFound();
-        }
+            .Include(b => b.Genre)
+            .FirstOrDefaultAsync(b => b.ISBN == isbn);
+
+        if (book == null) return NotFound("Book not found.");
 
         return View(book);
     }
