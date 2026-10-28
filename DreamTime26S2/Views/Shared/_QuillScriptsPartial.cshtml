@@ -11,6 +11,11 @@
      */
     function initialiseQuillEditor(formFieldSelector, quillSelector = ".quill-editor")
     {
+        // Enable validation for hidden field (jQuery Validation plugin normally ignores hidden fields)
+        $.validator.setDefaults({
+            ignore: []  // Default is ":hidden"
+        })
+
         // Initialise a Quill JS editor instance (for Description form field)
         const quill = new Quill(quillSelector, {
             theme: 'snow',
