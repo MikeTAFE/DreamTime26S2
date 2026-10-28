@@ -50,3 +50,10 @@ body {
     max-height: 50px;
     width: auto;
 }
+
+
+/* Quill JS editor */
+.ql-editor {
+    min-height: 10lh;  /* Min Quill editor height ~= 10 lines */
+}
+

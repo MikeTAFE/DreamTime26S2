@@ -29,6 +29,7 @@ namespace DreamTime26S2.Models
         public int Pages { get; set; }
 
         [Required]
+        [DisplayFormat(HtmlEncode = false)]
         public required string Description { get; set; }
 
         [StringLength(100)]
