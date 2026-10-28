@@ -1,0 +1,17 @@
+﻿@model IEnumerable<DreamTime26S2.Models.Book>
+
+<div class="book-card-list">
+    @if (Model.Any())
+    {
+        <div class="row gap-2 justify-content-center">
+            @foreach (var book in Model)
+            {
+                <partial name="_BookCardPartial" model="book" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>No books to display</p>
+    }
+</div>
