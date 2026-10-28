@@ -190,4 +190,11 @@ public class BooksController : Controller
     {
         return _context.Books.Any(e => e.ISBN == isbn);
     }
+
+    // GET: Books/ViewAll
+    public async Task<IActionResult> ViewAll()
+    {
+        // Get the list of books with their associated genres
+        return View(await _context.Books.Include(b => b.Genre).ToListAsync());
+    }
 }
