@@ -1,0 +1,41 @@
+﻿@* Include Quill JS library *@
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+<script>
+
+    /**
+     * Initialise a Quill JS editor instance using the specified selectors for form field and Quill editor.
+     * 
+     * @@param {string} formFieldSelector The CSS-style selector for the form field
+     * @@param {string} quillSelector The CSS-style selector for the Quill editor container
+     */
+    function initialiseQuillEditor(formFieldSelector, quillSelector = ".quill-editor")
+    {
+        // Initialise a Quill JS editor instance (for Description form field)
+        const quill = new Quill(quillSelector, {
+            theme: 'snow',
+            modules: {
+                // List of Quill JS formats to customise the toolbar: https://quilljs.com/docs/formats
+                // toolbar: [
+                //     [{ header: [1, 2, false] }],
+                //     ['bold', 'italic'],
+                //     ['link', 'image', 'code-block'],
+                // ],
+            }
+        });
+
+        // Get reference to the form field
+        const formField = document.querySelector(formFieldSelector);
+
+        // Automatically update the form field whenever the Quill HTML content changes
+        quill.on('text-change', () => {
+            
+            // This is called whenever the Quill content changes
+
+            // Update the form field value to Quill HTML content
+            // If Quill contents are "empty" whitespace (e.g. empty paragraph, spaces, etc), set "" to trigger validation
+            formField.value = /^\s*$/.test(quill.root.innerText) ? "" : quill.root.innerHTML;
+        });
+    }
+
+</script>
