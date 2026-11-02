@@ -16,7 +16,20 @@ public class GenresController : Controller
     // GET: GENRES
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.Genres.ToListAsync());
+        // OPTION 1: Just return ALL books with each genre (very expensive/inefficient)
+        //var genres = await _context.Genres.Include(g => g.Books).ToListAsync();
+
+        // OPTION 2: Check if each genre has books - update Genre.HasBooks property
+        var genres = await _context.Genres
+            .Select(g => new Genre
+            {
+                Id = g.Id,
+                Name = g.Name,
+                HasBooks = g.Books.Any()
+            })
+            .ToListAsync();
+
+        return View(genres);
     }
 
     // GET: GENRES/Details/5
@@ -134,6 +147,17 @@ public class GenresController : Controller
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var genre = await _context.Genres.FindAsync(id);
+
+        // Check if genre not found
+        if (genre == null) return NotFound("Genre not found.");
+
+        // Check if genre has books - stop deletion (add error)
+        if (_context.Books.Any(b => b.GenreId == id))
+        {
+            ModelState.AddModelError("Id", "Cannot delete genre because it has associated books.");
+            return View(genre);
+        }
+
         if (genre != null)
         {
             _context.Genres.Remove(genre);
