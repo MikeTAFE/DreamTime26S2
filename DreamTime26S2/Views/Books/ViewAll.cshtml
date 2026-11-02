@@ -6,4 +6,39 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<form asp-controller="Books" asp-action="ViewAll" method="get" class="d-flex justify-content-center gap-2 mb-3">
+
+    @* Seach text input *@
+    @* <input type="search" name="search" placeholder="Search..." class="form-control form-control-sm w-auto" /> *@
+    @Html.Editor(
+        "search",                  // Field name
+        new                        // Additional options/data
+        {
+            htmlAttributes = new   // HTML attributes added to the <input>
+            {
+                placeholder = "Search...",
+                @class = "form-control form-control-sm w-auto",
+                aria_label = "Search for a book"
+            }
+        }
+    )
+
+    @* Genre dropdown *@
+    <select name="genreId" asp-items="ViewBag.GenreList" class="form-select form-select-sm w-auto">
+        <option value="">All genres</option>
+    </select>
+
+    @* Submit button *@
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search-heart me-1"></i>
+        Search
+    </button>
+
+    @* Reset button/link *@
+    <a asp-controller="Books" asp-action="ViewAll" class="btn btn-secondary">
+        <i class="bi bi-arrow-counterclockwise me-1"></i>
+        Reset
+    </a>
+</form>
+
 <partial name="_BookCardListPartial" model="Model" />

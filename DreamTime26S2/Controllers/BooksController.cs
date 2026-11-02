@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using DreamTime26S2.Models;
 using DreamTime26S2.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens.Configuration;
 
 [Route("[controller]/[action]/{isbn?}")]
 public class BooksController : Controller
@@ -192,9 +193,32 @@ public class BooksController : Controller
     }
 
     // GET: Books/ViewAll
-    public async Task<IActionResult> ViewAll()
+    public async Task<IActionResult> ViewAll(string? search, int? genreId)
     {
+        // Get a reference to all books
+        IQueryable<Book> books = _context.Books;
+
+        // Check if search param is given
+        if (!string.IsNullOrEmpty(search))
+        {
+            // Filter book results
+            books = books.Where(b => b.Title.Contains(search) || b.Author.Contains(search) || b.Description.Contains(search));
+        }
+
+        // Check if genreId param is given
+        if (genreId != null)
+        {
+            // Filter book results
+            books = books.Where(b => b.GenreId == genreId);
+        }
+
+        // Sort the results
+        books = books.OrderBy(b => b.Title);
+
+        // Get a list of genres from the DB
+        ViewData["GenreList"] = new SelectList(_context.Genres, "Id", "Name", genreId);
+
         // Get the list of books with their associated genres
-        return View(await _context.Books.Include(b => b.Genre).ToListAsync());
+        return View(await books.Include(b => b.Genre).ToListAsync());
     }
 }
