@@ -8,5 +8,7 @@ namespace DreamTime26S2.Data
     {
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
+        public DbSet<Room> Rooms { get; set; }
     }
 }
