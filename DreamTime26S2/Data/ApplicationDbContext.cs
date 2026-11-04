@@ -11,6 +11,7 @@ namespace DreamTime26S2.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Timeslot> Timeslots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +54,31 @@ namespace DreamTime26S2.Data
                 new Room { Code = "N05", RoomTypeId = 3 },
                 new Room { Code = "N06", RoomTypeId = 3 }
             );
+
+            // Timeslots - list of available times in 30-minute intervals
+
+            //// OPTION 1: Manually add each item
+            //builder.Entity<Timeslot>().HasData(
+            //    new Timeslot { Time = new TimeOnly(8, 0) },   // 8:00AM
+            //    new Timeslot { Time = new TimeOnly(8, 30) },  // 8:30AM
+            //    new Timeslot { Time = new TimeOnly(9, 0) }    // 9:00AM
+            //);
+
+            // OPTION 2: Loop through each timeslot
+
+            // List to hold timeslots
+            List<Timeslot> timeslots = new();
+
+            // Loop to generate all timeslots (30-min intervals)
+            TimeOnly startTime = new TimeOnly(8, 0);   // 8:00AM
+            TimeOnly endTime = new TimeOnly(22, 0);    // 10:00PM
+            for (int minutes = 0; startTime.AddMinutes(minutes) <= endTime; minutes += 30)
+            {
+                timeslots.Add(new Timeslot(startTime.AddMinutes(minutes)));
+            }
+
+            // Add timeslots to the EF collection
+            builder.Entity<Timeslot>().HasData(timeslots);
 
 
             // Pass customisation through to the base DbContext class (via IdentityDbContext)

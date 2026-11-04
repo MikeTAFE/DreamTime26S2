@@ -70,7 +70,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Genre", b =>
@@ -88,7 +88,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Room", b =>
@@ -104,7 +104,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
 
                     b.HasData(
                         new
@@ -192,7 +192,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomTypes", (string)null);
+                    b.ToTable("RoomTypes");
 
                     b.HasData(
                         new
@@ -212,6 +212,134 @@ namespace DreamTime26S2.Data.Migrations
                             Id = 3,
                             Capacity = 6,
                             Name = "Novel Nook"
+                        });
+                });
+
+            modelBuilder.Entity("DreamTime26S2.Models.Timeslot", b =>
+                {
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time");
+
+                    b.HasKey("Time");
+
+                    b.ToTable("Timeslots");
+
+                    b.HasData(
+                        new
+                        {
+                            Time = new TimeOnly(8, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(8, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(9, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(9, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(10, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(10, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(11, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(11, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(12, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(12, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(13, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(13, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(14, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(14, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(15, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(15, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(16, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(16, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(17, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(17, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(18, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(18, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(19, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(19, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(20, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(20, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(21, 0, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(21, 30, 0)
+                        },
+                        new
+                        {
+                            Time = new TimeOnly(22, 0, 0)
                         });
                 });
 
