@@ -70,7 +70,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Genre", b =>
@@ -88,7 +88,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Room", b =>
@@ -104,7 +104,74 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "B01",
+                            RoomTypeId = 1
+                        },
+                        new
+                        {
+                            Code = "B02",
+                            RoomTypeId = 1
+                        },
+                        new
+                        {
+                            Code = "B03",
+                            RoomTypeId = 1
+                        },
+                        new
+                        {
+                            Code = "I01",
+                            RoomTypeId = 2
+                        },
+                        new
+                        {
+                            Code = "I02",
+                            RoomTypeId = 2
+                        },
+                        new
+                        {
+                            Code = "I03",
+                            RoomTypeId = 2
+                        },
+                        new
+                        {
+                            Code = "I04",
+                            RoomTypeId = 2
+                        },
+                        new
+                        {
+                            Code = "N01",
+                            RoomTypeId = 3
+                        },
+                        new
+                        {
+                            Code = "N02",
+                            RoomTypeId = 3
+                        },
+                        new
+                        {
+                            Code = "N03",
+                            RoomTypeId = 3
+                        },
+                        new
+                        {
+                            Code = "N04",
+                            RoomTypeId = 3
+                        },
+                        new
+                        {
+                            Code = "N05",
+                            RoomTypeId = 3
+                        },
+                        new
+                        {
+                            Code = "N06",
+                            RoomTypeId = 3
+                        });
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.RoomType", b =>
@@ -125,7 +192,27 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomTypes");
+                    b.ToTable("RoomTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacity = 12,
+                            Name = "Bibliophile"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacity = 10,
+                            Name = "Inkwell"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 6,
+                            Name = "Novel Nook"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
