@@ -1,19 +1,20 @@
 @model IEnumerable<DreamTime26S2.Models.Room>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage rooms";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Add room</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RoomTypeId)
+                @Html.DisplayNameFor(model => model.Code)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RoomType)
@@ -25,15 +26,20 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.RoomTypeId)
+                @Html.DisplayFor(model => item.Code)
             </td>
             <td>
-                @Html.DisplayFor(model => item.RoomType)
+                @Html.DisplayFor(model => item.RoomType.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Code">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Code">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Code">Delete</a>
+                <a asp-action="Edit" asp-route-code="@item.Code" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil-fill"></i>
+                    Edit
+                </a>
+                <a asp-action="Delete" asp-route-code="@item.Code" class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash-fill"></i>
+                    Delete
+                </a>
             </td>
         </tr>
 }

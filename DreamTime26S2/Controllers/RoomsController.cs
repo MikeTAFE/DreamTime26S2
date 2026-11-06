@@ -1,9 +1,11 @@
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DreamTime26S2.Models;
 using DreamTime26S2.Data;
+using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
+[Route("[controller]/[action]/{code?}")]
 public class RoomsController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -13,13 +15,13 @@ public class RoomsController : Controller
         _context = context;
     }
 
-    // GET: ROOMS
+    // GET: Rooms/
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Rooms.ToListAsync());
+        return View(await _context.Rooms.Include(r => r.RoomType).OrderBy(r => r.Code).ToListAsync());
     }
 
-    // GET: ROOMS/Details/5
+    // GET: Rooms/Details/5
     public async Task<IActionResult> Details(string? code)
     {
         if (code == null)
@@ -37,13 +39,15 @@ public class RoomsController : Controller
         return View(room);
     }
 
-    // GET: ROOMS/Create
+    // GET: Rooms/Create
     public IActionResult Create()
     {
+        // Get data and load the view
+        ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name");
         return View();
     }
 
-    // POST: ROOMS/Create
+    // POST: Rooms/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
@@ -56,10 +60,13 @@ public class RoomsController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // Get data and load the view
+        ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name");
         return View(room);
     }
 
-    // GET: ROOMS/Edit/5
+    // GET: Rooms/Edit/5
     public async Task<IActionResult> Edit(string? code)
     {
         if (code == null)
@@ -72,10 +79,13 @@ public class RoomsController : Controller
         {
             return NotFound();
         }
+
+        // Get data and load the view
+        ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name");
         return View(room);
     }
 
-    // POST: ROOMS/Edit/5
+    // POST: Rooms/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
@@ -107,10 +117,13 @@ public class RoomsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
+        // Get data and load the view
+        ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name");
         return View(room);
     }
 
-    // GET: ROOMS/Delete/5
+    // GET: Rooms/Delete/5
     public async Task<IActionResult> Delete(string? code)
     {
         if (code == null)
@@ -128,7 +141,7 @@ public class RoomsController : Controller
         return View(room);
     }
 
-    // POST: ROOMS/Delete/5
+    // POST: Rooms/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(string? code)
