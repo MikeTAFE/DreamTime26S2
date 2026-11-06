@@ -134,14 +134,26 @@ public class RoomTypesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var roomtype = await _context.RoomTypes.FindAsync(id);
-        if (roomtype != null)
+        var roomType = await _context.RoomTypes.FindAsync(id);
+        if (roomType != null)
         {
-            _context.RoomTypes.Remove(roomtype);
+            _context.RoomTypes.Remove(roomType);
         }
 
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        // Check if room type has rooms - stop deletion (add error)
+        if (await _context.Rooms.Where(r => r.RoomTypeId == id).AnyAsync())
+        {
+            ModelState.AddModelError("Id", "Cannot delete room type when it has rooms.");
+        }
+
+        // Delete in database if no errors
+        if (ModelState.IsValid)
+        {
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View("Delete", roomType);
     }
 
     private bool RoomTypeExists(int? id)
