@@ -13,14 +13,14 @@ public class RoomTypesController : Controller
         _context = context;
     }
 
-    // GET: ROOMTYPES
+    // GET: RoomTypes/
     public async Task<IActionResult> Index()    
     {
         //return View(await _context.RoomTypes.ToListAsync());
         return View(await _context.RoomTypes.Include(rt => rt.Rooms).ToListAsync());
     }
 
-    // GET: ROOMTYPES/Details/5
+    // GET: RoomTypes/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -28,39 +28,39 @@ public class RoomTypesController : Controller
             return NotFound();
         }
 
-        var roomtype = await _context.RoomTypes
+        var roomType = await _context.RoomTypes
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (roomtype == null)
+        if (roomType == null)
         {
             return NotFound();
         }
 
-        return View(roomtype);
+        return View(roomType);
     }
 
-    // GET: ROOMTYPES/Create
+    // GET: RoomTypes/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: ROOMTYPES/Create
+    // POST: RoomTypes/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Capacity,Rooms")] RoomType roomtype)
+    public async Task<IActionResult> Create([Bind("Id,Name,Capacity,Rooms")] RoomType roomType)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(roomtype);
+            _context.Add(roomType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(roomtype);
+        return View(roomType);
     }
 
-    // GET: ROOMTYPES/Edit/5
+    // GET: RoomTypes/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -68,22 +68,22 @@ public class RoomTypesController : Controller
             return NotFound();
         }
 
-        var roomtype = await _context.RoomTypes.FindAsync(id);
-        if (roomtype == null)
+        var roomType = await _context.RoomTypes.FindAsync(id);
+        if (roomType == null)
         {
             return NotFound();
         }
-        return View(roomtype);
+        return View(roomType);
     }
 
-    // POST: ROOMTYPES/Edit/5
+    // POST: RoomTypes/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Capacity,Rooms")] RoomType roomtype)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Capacity,Rooms")] RoomType roomType)
     {
-        if (id != roomtype.Id)
+        if (id != roomType.Id)
         {
             return NotFound();
         }
@@ -92,12 +92,12 @@ public class RoomTypesController : Controller
         {
             try
             {
-                _context.Update(roomtype);
+                _context.Update(roomType);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RoomTypeExists(roomtype.Id))
+                if (!RoomTypeExists(roomType.Id))
                 {
                     return NotFound();
                 }
@@ -108,10 +108,10 @@ public class RoomTypesController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(roomtype);
+        return View(roomType);
     }
 
-    // GET: ROOMTYPES/Delete/5
+    // GET: RoomTypes/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -119,17 +119,17 @@ public class RoomTypesController : Controller
             return NotFound();
         }
 
-        var roomtype = await _context.RoomTypes
+        var roomType = await _context.RoomTypes
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (roomtype == null)
+        if (roomType == null)
         {
             return NotFound();
         }
 
-        return View(roomtype);
+        return View(roomType);
     }
 
-    // POST: ROOMTYPES/Delete/5
+    // POST: RoomTypes/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
