@@ -215,6 +215,78 @@ namespace DreamTime26S2.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DreamTime26S2.Models.Slot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("SlotTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndTime");
+
+                    b.HasIndex("SlotTypeId");
+
+                    b.HasIndex("StartTime");
+
+                    b.ToTable("Slots");
+                });
+
+            modelBuilder.Entity("DreamTime26S2.Models.SlotType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("SlotTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Morning"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Afternoon"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Evening"
+                        });
+                });
+
             modelBuilder.Entity("DreamTime26S2.Models.Timeslot", b =>
                 {
                     b.Property<TimeOnly>("Time")
@@ -565,6 +637,33 @@ namespace DreamTime26S2.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("RoomType");
+                });
+
+            modelBuilder.Entity("DreamTime26S2.Models.Slot", b =>
+                {
+                    b.HasOne("DreamTime26S2.Models.Timeslot", "EndTimeslot")
+                        .WithMany()
+                        .HasForeignKey("EndTime")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.SlotType", "SlotType")
+                        .WithMany()
+                        .HasForeignKey("SlotTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.Timeslot", "StartTimeslot")
+                        .WithMany()
+                        .HasForeignKey("StartTime")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EndTimeslot");
+
+                    b.Navigation("SlotType");
+
+                    b.Navigation("StartTimeslot");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

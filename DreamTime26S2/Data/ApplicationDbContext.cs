@@ -12,6 +12,8 @@ namespace DreamTime26S2.Data
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Timeslot> Timeslots { get; set; }
+        public DbSet<SlotType> SlotTypes { get; set; }
+        public DbSet<Slot> Slots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +55,13 @@ namespace DreamTime26S2.Data
                 new Room { Code = "N04", RoomTypeId = 3 },
                 new Room { Code = "N05", RoomTypeId = 3 },
                 new Room { Code = "N06", RoomTypeId = 3 }
+            );
+
+            // Slot types
+            builder.Entity<SlotType>().HasData(
+                new SlotType { Id = 1, Name = "Morning" },
+                new SlotType { Id = 2, Name = "Afternoon" },
+                new SlotType { Id = 3, Name = "Evening" }
             );
 
             // Timeslots - list of available times in 30-minute intervals
