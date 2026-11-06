@@ -16,7 +16,7 @@ public class SlotsController : Controller
     // GET: Slots
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.Slots.ToListAsync());
+        return View(await _context.Slots.Include(s => s.SlotType).ToListAsync());
     }
 
     // GET: Slots/Details/5
@@ -27,7 +27,7 @@ public class SlotsController : Controller
             return NotFound();
         }
 
-        var slot = await _context.Slots
+        var slot = await _context.Slots.Include(s => s.SlotType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (slot == null)
         {
@@ -125,7 +125,7 @@ public class SlotsController : Controller
             return NotFound();
         }
 
-        var slot = await _context.Slots
+        var slot = await _context.Slots.Include(s => s.SlotType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (slot == null)
         {

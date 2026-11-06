@@ -1,77 +1,74 @@
 @model IEnumerable<DreamTime26S2.Models.Slot>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage slots";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Add slot</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SlotTypeId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Available)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SlotType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTimeslot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTimeslot)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.SlotTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Available)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.SlotType)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.StartTimeslot)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.EndTimeslot)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Weekday
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SlotType)
+                </th>
+                <th>
+                    Slot Time
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Available)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Date.DayOfWeek
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SlotType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                        -
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Available)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-fill"></i>
+                            Edit
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">
+                            <i class="bi bi-book-half"></i>
+                            Details
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash-fill"></i>
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
