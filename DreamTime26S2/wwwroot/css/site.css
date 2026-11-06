@@ -97,3 +97,34 @@ body {
     text-align: center;
 }
 
+
+
+/*
+    Available/unavailable status in tables
+*/
+
+.table .status-available {
+    color: #1ca12e;
+}
+
+.table .status-unavailable {
+    color: #dc3b45;
+}
+
+/*.status-available::before, .status-unavailable::before {}*/
+.table :is(.status-available, .status-unavailable)::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.table .status-available::before {
+    content: '\F26A'; /* tick glyph */
+}
+
+.table .status-unavailable::before {
+    content: '\F622'; /* cross glyph */
+}
+
