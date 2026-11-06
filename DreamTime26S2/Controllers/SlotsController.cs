@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DreamTime26S2.Models;
 using DreamTime26S2.Data;
+using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 public class SlotsController : Controller
 {
@@ -39,6 +40,7 @@ public class SlotsController : Controller
     // GET: Slots/Create
     public IActionResult Create()
     {
+        PopulateViewData();
         return View();
     }
 
@@ -55,6 +57,8 @@ public class SlotsController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        PopulateViewData(slot);
         return View(slot);
     }
 
@@ -71,6 +75,8 @@ public class SlotsController : Controller
         {
             return NotFound();
         }
+
+        PopulateViewData(slot);
         return View(slot);
     }
 
@@ -106,6 +112,8 @@ public class SlotsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
+        PopulateViewData(slot);
         return View(slot);
     }
 
@@ -145,5 +153,32 @@ public class SlotsController : Controller
     private bool SlotExists(int? id)
     {
         return _context.Slots.Any(e => e.Id == id);
+    }
+
+    /// <summary>
+    /// Populates the ViewData object with data for the dropdown lists
+    /// </summary>
+    /// <param name="slotTypeId">Default value for the slot type</param>
+    /// <param name="startTime">Default value for the start time</param>
+    /// <param name="endTime">Default value for the end time</param>
+    private void PopulateViewData(int? slotTypeId, TimeOnly? startTime, TimeOnly? endTime)
+    {
+        // Sort slot types by ID (not by name)
+        ViewData["SlotTypeList"] = new SelectList(_context.SlotTypes.OrderBy(st => st.Id), "Id", "Name", slotTypeId);
+        ViewData["StartTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", startTime);
+        ViewData["EndTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", endTime);
+    }
+
+    /// <param name="slot">The Slot object to use for default values</param>
+    /// <inheritdoc cref="PopulateViewData(int?, TimeOnly?, TimeOnly?)" />
+    private void PopulateViewData(Slot slot)
+    {
+        PopulateViewData(slot.SlotTypeId, slot.StartTime, slot.EndTime);
+    }
+
+    /// <inheritdoc cref="PopulateViewData(int?, TimeOnly?, TimeOnly?)" />
+    private void PopulateViewData()
+    {
+        PopulateViewData(null, null, null);
     }
 }

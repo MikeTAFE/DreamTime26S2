@@ -13,46 +13,37 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="SlotTypeId" class="control-label"></label>
-                <input asp-for="SlotTypeId" class="form-control" />
+                <select asp-for="SlotTypeId" class="form-control" asp-items="ViewBag.SlotTypeList"></select>
                 <span asp-validation-for="SlotTypeId" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
+                <select asp-for="StartTime" class="form-control" asp-items="ViewBag.StartTimeList"></select>
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
+                <select asp-for="EndTime" class="form-control" asp-items="ViewBag.EndTimeList"></select>
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="Available" class="control-label"></label>
                 <input asp-for="Available" class="form-check-input" />
                 <span asp-validation-for="Available" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SlotType" class="control-label"></label>
-                <input asp-for="SlotType" class="form-control" />
-                <span asp-validation-for="SlotType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartTimeslot" class="control-label"></label>
-                <input asp-for="StartTimeslot" class="form-control" />
-                <span asp-validation-for="StartTimeslot" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndTimeslot" class="control-label"></label>
-                <input asp-for="EndTimeslot" class="form-control" />
-                <span asp-validation-for="EndTimeslot" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
