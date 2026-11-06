@@ -14,7 +14,7 @@ public class RoomsController : Controller
     }
 
     // GET: ROOMS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
         return View(await _context.Rooms.ToListAsync());
     }

@@ -16,7 +16,8 @@ public class RoomTypesController : Controller
     // GET: ROOMTYPES
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.RoomTypes.ToListAsync());
+        //return View(await _context.RoomTypes.ToListAsync());
+        return View(await _context.RoomTypes.Include(rt => rt.Rooms).ToListAsync());
     }
 
     // GET: ROOMTYPES/Details/5
