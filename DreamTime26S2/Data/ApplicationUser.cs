@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DreamTime26S2.Models
+namespace DreamTime26S2.Data
 {
     public class ApplicationUser : IdentityUser
     {
