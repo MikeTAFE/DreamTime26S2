@@ -1,14 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
+using DreamTime26S2.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using DreamTime26S2.Data;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DreamTime26S2.Areas.Identity.Pages.Account;
 
@@ -70,6 +71,17 @@ public class RegisterModel : PageModel
     /// </summary>
     public class InputModel
     {
+        // Add support for FirstName & LastName
+        [Required]
+        [DisplayName("First Name")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
+        public required string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [DisplayName("Last Name")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
+        public required string LastName { get; set; } = string.Empty;
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -112,16 +124,29 @@ public class RegisterModel : PageModel
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         if (ModelState.IsValid)
         {
+            // Blank user object
             var user = CreateUser();
 
+            // Set first & last names
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+
+            // Set other information (username, email, etc)
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+            // Create new user in the system
             var result = await _userManager.CreateAsync(user, Input.Password);
 
+            // Check if user created successfully
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
 
+                // TODO: Assign default role to the user
+
+
+                // Send confirmation email and finish up
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
