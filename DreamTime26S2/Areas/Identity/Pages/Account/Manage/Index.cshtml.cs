@@ -2,14 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using DreamTime26S2.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using DreamTime26S2.Data;
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace DreamTime26S2.Areas.Identity.Pages.Account.Manage;
 
@@ -59,6 +60,17 @@ public class IndexModel : PageModel
         [Phone]
         [Display(Name = "Phone number")]
         public string? PhoneNumber { get; set; }
+
+        // Add support for FirstName & LastName
+        [Required]
+        [DisplayName("First Name")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
+        public required string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [DisplayName("Last Name")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
+        public required string LastName { get; set; } = string.Empty;
     }
 
     private async Task LoadAsync(ApplicationUser user)
@@ -70,7 +82,9 @@ public class IndexModel : PageModel
 
         Input = new InputModel
         {
-            PhoneNumber = phoneNumber
+            PhoneNumber = phoneNumber,
+            FirstName = user.FirstName,
+            LastName = user.LastName
         };
     }
 
@@ -109,6 +123,18 @@ public class IndexModel : PageModel
                 StatusMessage = "Unexpected error when trying to set phone number.";
                 return RedirectToPage();
             }
+        }
+
+        // Set first & last names
+        user.FirstName = Input.FirstName;
+        user.LastName = Input.LastName;
+
+        // Try to update user (check for errors)
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            StatusMessage = "Unexpected error when trying to update user profile.";
+            return RedirectToPage();
         }
 
         await _signInManager.RefreshSignInAsync(user);
