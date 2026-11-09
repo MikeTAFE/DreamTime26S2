@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DreamTime26S2.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+    // Tell ASP.NET Identity to use our custom ApplicationUser class (instead of IdentityUser)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Book> Books { get; set; }
