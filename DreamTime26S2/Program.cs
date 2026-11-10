@@ -34,6 +34,43 @@ builder.Services.AddControllersWithViews();
 // Build the web app
 var app = builder.Build();
 
+
+
+/*
+ * Seed data for roles and users
+ * 
+ * --SQL query to show all users with their roles
+ * 
+ * SELECT u.Id AS UserId, u.UserName, u.Email, CONCAT(u.FirstName, ' ', u.LastName) AS FullName, STRING_AGG(r.Name, ', ') AS Roles
+ * FROM AspNetUsers u
+ *     LEFT JOIN AspNetUserRoles ur ON u.Id = ur.UserId
+ *     LEFT JOIN AspNetRoles r ON ur.RoleId = r.Id
+ * GROUP BY    u.Id, u.UserName, u.Email, u.FirstName, u.LastName;
+ * 
+ */
+
+// Use scoped services such as DbContext, UserManager, RoleManager
+using (var scope = app.Services.CreateScope())
+{
+    // Get EF Core DbContext
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // OPTIONAL: Automatically apply any pending DB migrations
+    await context.Database.MigrateAsync();
+
+    // Roles are required application data
+    await IdentitySeeder.SeedRolesAsync(services);
+
+    // OPTIONAL: Demo users only exist in Development environment
+    if (app.Environment.IsDevelopment())
+    {
+        await IdentitySeeder.SeedUsersAsync(services);
+    }
+}
+
+
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
