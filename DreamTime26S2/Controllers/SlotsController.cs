@@ -1,9 +1,12 @@
 using DreamTime26S2.Data;
 using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+// Allow access to Staff OR Manager roles (default for entire controller)
+[Authorize(Roles = "Staff,Manager")]
 public class SlotsController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -14,6 +17,8 @@ public class SlotsController : Controller
     }
 
     // GET: Slots
+    // Allow access to ANYONE (even non-logged-in users)
+    //[AllowAnonymous]
     public async Task<IActionResult> Index()    
     {
         return View(await _context.Slots.Include(s => s.SlotType).ToListAsync());
@@ -38,6 +43,11 @@ public class SlotsController : Controller
     }
 
     // GET: Slots/Create
+    // Allow access to Staff OR Manager
+    //[Authorize(Roles = "Staff,Manager")]
+    // Allow access to Staff AND Manager (user with BOTH roles)
+    //[Authorize(Roles = "Staff")]
+    //[Authorize(Roles = "Manager")]
     public IActionResult Create()
     {
         PopulateViewData();
@@ -118,6 +128,8 @@ public class SlotsController : Controller
     }
 
     // GET: Slots/Delete/5
+    // Only allow access to the Manager role
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -136,6 +148,8 @@ public class SlotsController : Controller
     }
 
     // POST: Slots/Delete/5
+    // Only allow access to the Manager role
+    [Authorize(Roles = "Manager")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)

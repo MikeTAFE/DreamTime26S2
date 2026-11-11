@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DreamTime26S2.Models;
 using DreamTime26S2.Data;
+using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens.Configuration;
 
+// Allow access to Staff OR Manager roles (default for entire controller)
+[Authorize(Roles = "Staff,Manager")]
 [Route("[controller]/[action]/{isbn?}")]
 public class BooksController : Controller
 {
@@ -193,6 +196,8 @@ public class BooksController : Controller
     }
 
     // GET: Books/ViewAll
+    // Allow access to ANYONE (even non-logged-in users)
+    [AllowAnonymous]
     public async Task<IActionResult> ViewAll(string? search, int? genreId)
     {
         // Get a reference to all books
