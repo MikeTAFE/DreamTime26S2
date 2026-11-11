@@ -31,14 +31,20 @@ public class RegisterModel : PageModel
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailSender _emailSender;
 
+    // Add role support (assigning default role to user on registration)
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private const string _defaultUserRole = "Member";
+
     public RegisterModel(
         UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,  // Add role support
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender)
     {
         _userManager = userManager;
+        _roleManager = roleManager;  // Add role support
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
@@ -143,8 +149,18 @@ public class RegisterModel : PageModel
             {
                 _logger.LogInformation("User created a new account with password.");
 
-                // TODO: Assign default role to the user
-
+                // Check if default role exists in database
+                if (await _roleManager.RoleExistsAsync(_defaultUserRole))
+                {
+                    // Role exists - assign to user
+                    await _userManager.AddToRoleAsync(user, _defaultUserRole);
+                    _logger.LogInformation($"Role '{_defaultUserRole}' was assigned to new user '{user.UserName}'.");
+                }
+                else
+                {
+                    // Role doesn't exist - error
+                    _logger.LogError($"Role '{_defaultUserRole}' does not exist.");
+                }
 
                 // Send confirmation email and finish up
                 var userId = await _userManager.GetUserIdAsync(user);
