@@ -2,51 +2,50 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    bool isMember = User.IsInRole("Member");
+    bool isStaff = User.IsInRole("Staff");
+    bool isManager = User.IsInRole("Manager");
+    bool isLoggedIn = SignInManager.IsSignedIn(User);
+}
+
 <ul class="navbar-nav flex-grow-1">
+
+    @* Common links for ALL users *@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="ViewAll">All books</a>
     </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownRooms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-tag-fill"></i>
-            Genres
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownRooms">
-            <li><a class="dropdown-item" asp-area="" asp-controller="Genres" asp-action="Index">Manage genres</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="Genres" asp-action="Create">Add genre</a></li>
-        </ul>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownRooms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-book-half"></i>
-            Books
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownRooms">
-            <li><a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Index">Manage books</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Create">Add book</a></li>
-        </ul>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownRooms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-door-open-fill"></i>
-            Rooms
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownRooms">
-            <li><a class="dropdown-item" asp-area="" asp-controller="RoomTypes" asp-action="Index">Manage room types</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="RoomTypes" asp-action="Create">Add room type</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="Rooms" asp-action="Index">Manage rooms</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="Rooms" asp-action="Create">Add room</a></li>
-        </ul>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-calendar3"></i>
-            Slots
-        </a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" asp-area="" asp-controller="Slots" asp-action="Index">Manage slots</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="Slots" asp-action="Create">Add slot</a></li>
-        </ul>
-    </li>
+
+    @* TODO: Add create reservation links *@
+
+    @* Custom nav for anonymous users (not logged in) *@
+    @if (!isLoggedIn)
+    {
+        // E.g. register & login
+    }
+
+    @* Custom nav for member/user/customer *@
+    @if (isMember)
+    {
+        <partial name="Nav/_MemberNavPartial" />
+    }
+
+    @* Custom nav for ALL staff *@
+    @if (isStaff)
+    {
+        <partial name="Nav/_StaffNavPartial" />
+    }
+
+    @* Custom nav for regular staff (not managers) *@
+    @if (isStaff && !isManager)
+    {
+        // Staff who are not managers
+    }
+
+    @* Custom nav for managers *@
+    @if (isManager)
+    {
+        <partial name="Nav/_ManagerNavPartial" />
+    }
+
 </ul>
