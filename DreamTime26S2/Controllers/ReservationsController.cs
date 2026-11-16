@@ -1,9 +1,11 @@
 using DreamTime26S2.Data;
 using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize(Roles = "Member, Staff, Manager")]
 public class ReservationsController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -51,6 +53,7 @@ public class ReservationsController : Controller
     }
 
     // GET: Reservations/Create
+    [AllowAnonymous]
     public IActionResult Create()
     {
         PopulateViewData();
@@ -62,6 +65,7 @@ public class ReservationsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> Create([Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,Status")] Reservation reservation)
     {
         if (ModelState.IsValid)
@@ -76,6 +80,7 @@ public class ReservationsController : Controller
     }
 
     // GET: Reservations/Edit/5
+    [Authorize(Roles = "Staff, Manager")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -95,6 +100,7 @@ public class ReservationsController : Controller
 
     // GET: Reservations/Edit/5/Confirmed
     // Allow easy status update via GET request
+    [Authorize(Roles = "Staff, Manager")]
     [HttpGet("{controller}/{action}/{id}/{status}")]
     public async Task<IActionResult> Edit(int id, string status)
     {
@@ -123,6 +129,7 @@ public class ReservationsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Staff, Manager")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,Status")] Reservation reservation)
     {
         if (id != reservation.Id)
@@ -156,6 +163,7 @@ public class ReservationsController : Controller
     }
 
     // GET: Reservations/Delete/5
+    [Authorize(Roles = "Staff, Manager")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -182,6 +190,7 @@ public class ReservationsController : Controller
     // POST: Reservations/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Staff, Manager")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var reservation = await _context.Reservations.FindAsync(id);
