@@ -20,5 +20,13 @@
         <li><a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Create">Add book</a></li>
     </ul>
 </li>
-
-@* TODO: Add reservation management links *@
+<li class="nav-item dropdown">
+    <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownRooms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-book-half"></i>
+        Reservations
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRooms">
+        <li><a class="dropdown-item" asp-area="" asp-controller="Reservations" asp-action="Index">Manage reservations</a></li>
+        <li><a class="dropdown-item" asp-area="" asp-controller="Reservations" asp-action="Create">Add reservation</a></li>
+    </ul>
+</li>
