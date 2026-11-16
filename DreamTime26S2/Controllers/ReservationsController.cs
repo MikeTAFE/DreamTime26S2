@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DreamTime26S2.Models;
 using DreamTime26S2.Data;
+using DreamTime26S2.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 public class ReservationsController : Controller
 {
@@ -39,6 +40,7 @@ public class ReservationsController : Controller
     // GET: Reservations/Create
     public IActionResult Create()
     {
+        PopulateViewData();
         return View();
     }
 
@@ -55,6 +57,8 @@ public class ReservationsController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -71,6 +75,8 @@ public class ReservationsController : Controller
         {
             return NotFound();
         }
+
+        PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -106,6 +112,8 @@ public class ReservationsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
+        PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -145,5 +153,41 @@ public class ReservationsController : Controller
     private bool ReservationExists(int? id)
     {
         return _context.Reservations.Any(e => e.Id == id);
+    }
+
+
+    /// <summary>
+    /// Populates the ViewData object with data for the dropdown lists
+    /// </summary>
+    /// <param name="startTime">Default value for the start time</param>
+    /// <param name="endTime">Default value for the end time</param>
+    /// <param name="roomTypeId">Default value for the room type</param>
+    /// <param name="slotId">Default value for the slot</param>
+    /// <param name="userId">Default value for the user</param>
+    private void PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)
+    {
+        // TODO: Add OrderBy() to the lists
+        ViewData["StartTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", startTime);
+        ViewData["EndTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", endTime);
+        ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name", roomTypeId);
+
+        // TODO: Display description for slot instead of ID
+        ViewData["SlotList"] = new SelectList(_context.Slots, "Id", "Id", slotId);
+
+        // TODO: Display ordered list of users with full names
+        ViewData["UserList"] = new SelectList(_context.Users, "Id", "Id", userId);
+    }
+
+    /// <param name="reservation">The Reservation object to use for default values</param>
+    /// <inheritdoc cref="PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)" />
+    private void PopulateViewData(Reservation reservation)
+    {
+        PopulateViewData(reservation.StartTime, reservation.EndTime, reservation.RoomTypeId, reservation.SlotId, reservation.UserId);
+    }
+
+    /// <inheritdoc cref="PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)" />
+    private void PopulateViewData()
+    {
+        PopulateViewData(null, null, null, null, null);
     }
 }
