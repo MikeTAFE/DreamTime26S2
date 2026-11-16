@@ -37,6 +37,11 @@ namespace DreamTime26S2.Models
         public required bool Available { get; set; } = true;
 
 
+        [NotMapped]
+        [DisplayName("Description")]
+        public string Description { get => $"{this.Date} - {this.SlotType?.Name ?? "?"} ({this.StartTime}-{this.EndTime})"; }
+
+
         // Assocations (Navigation Properties)
 
         [DeleteBehavior(DeleteBehavior.Restrict)]
