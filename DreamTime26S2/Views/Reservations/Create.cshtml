@@ -1,25 +1,26 @@
 @model DreamTime26S2.Models.Reservation
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create reservation";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Reservation</h4>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" class="d-flex flex-column gap-2">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
+            @* TODO: Only show user dropdown to staff/managers (if making reservation on their behalf) *@
+            @* <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserList">
                     <option value="">-- None --</option>
                 </select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
+            </div> *@
 
             <div class="form-group">
                 <label asp-for="SlotId" class="control-label"></label>
@@ -27,40 +28,46 @@
                 <span asp-validation-for="SlotId" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <select asp-for="StartTime" class="form-control" asp-items="ViewBag.StartTimeList"></select>
-                <span asp-validation-for="StartTime" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="StartTime" class="control-label"></label>
+                    <select asp-for="StartTime" class="form-control" asp-items="ViewBag.StartTimeList"></select>
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col">
+                    <label asp-for="EndTime" class="control-label"></label>
+                    <select asp-for="EndTime" class="form-control" asp-items="ViewBag.EndTimeList"></select>
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <select asp-for="EndTime" class="form-control" asp-items="ViewBag.EndTimeList"></select>
-                <span asp-validation-for="EndTime" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="RoomTypeId" class="control-label"></label>
+                    <select asp-for="RoomTypeId" class="form-control" asp-items="ViewBag.RoomTypeList"></select>
+                    <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col">
+                    <label asp-for="NumberOfPeople" class="control-label"></label>
+                    <input asp-for="NumberOfPeople" class="form-control" />
+                    <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label"></label>
-                <select asp-for="RoomTypeId" class="form-control" asp-items="ViewBag.RoomTypeList"></select>
-                <span asp-validation-for="RoomTypeId" class="text-danger"></span>
-            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="NumberOfPeople" class="control-label"></label>
-                <input asp-for="NumberOfPeople" class="form-control" />
-                <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <div class="form-group col">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -77,19 +84,17 @@
 
             <div class="form-group">
                 <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
+                @* <input asp-for="Notes" class="form-control" /> *@
+                <textarea asp-for="Notes" class="form-control"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

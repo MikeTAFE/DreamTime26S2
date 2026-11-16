@@ -1,40 +1,36 @@
 @model IEnumerable<DreamTime26S2.Models.Reservation>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage reservations";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Add reservation</a>
 </p>
+
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                #
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SlotId)
+                @Html.DisplayNameFor(model => model.Slot)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTime)
+                Reservation Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndTime)
+                @Html.DisplayNameFor(model => model.RoomType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoomTypeId)
+                # People
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumberOfPeople)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FullName)
@@ -45,27 +41,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Slot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTimeslot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTimeslot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RoomType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rooms)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -73,65 +48,58 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.UserId)
+                @Html.DisplayFor(model => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(model => item.SlotId)
+                @Html.DisplayFor(modelItem => item.Slot.Date)
+                -
+                @Html.DisplayFor(modelItem => item.Slot.SlotType.Name)
             </td>
             <td>
-                @Html.DisplayFor(model => item.StartTime)
+                @Html.DisplayFor(modelItem => item.StartTime)
+                -
+                @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(model => item.EndTime)
+                @Html.DisplayFor(modelItem => item.RoomType.Name)
             </td>
             <td>
-                @Html.DisplayFor(model => item.RoomTypeId)
+                @Html.DisplayFor(modelItem => item.NumberOfPeople)
+            </td>
+            <td class="status-td status-@item.Status.ToString().ToLower()">
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(model => item.NumberOfPeople)
+                @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
-                @Html.DisplayFor(model => item.FirstName)
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td class="text-nowrap">
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.Note)
             </td>
             <td>
-                @Html.DisplayFor(model => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Slot)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.StartTimeslot)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.EndTimeslot)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.RoomType)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Rooms)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.User.Id)
+            </td> *@
+            <td class="d-flex gap-1">
+                <a asp-action="Edit" asp-route-id="@item.Id"
+                    class="btn btn-sm btn-secondary" title="Edit">
+                    <i class="bi bi-pencil-fill" aria-label="Edit"></i>
+                </a>
+                <a asp-action="Details" asp-route-id="@item.Id"
+                    class="btn btn-sm btn-primary" title="Details">
+                    <i class="bi bi-book-half" aria-label="Details"></i>
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.Id"
+                    class="btn btn-sm btn-danger" title="Delete">
+                    <i class="bi bi-trash-fill" aria-label="Delete"></i>
+                </a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>

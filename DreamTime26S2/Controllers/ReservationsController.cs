@@ -16,7 +16,14 @@ public class ReservationsController : Controller
     // GET: Reservations
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.Reservations.ToListAsync());
+        var data = _context.Reservations
+            .Include(r => r.StartTimeslot)
+            .Include(r => r.EndTimeslot)
+            .Include(r => r.RoomType)
+            .Include(r => r.Slot)
+            .ThenInclude(s => s.SlotType) // Include slot type AFTER slot included
+            .Include(r => r.User);
+        return View(await data.ToListAsync());
     }
 
     // GET: Reservations/Details/5
@@ -28,6 +35,12 @@ public class ReservationsController : Controller
         }
 
         var reservation = await _context.Reservations
+            .Include(r => r.StartTimeslot)
+            .Include(r => r.EndTimeslot)
+            .Include(r => r.RoomType)
+            .Include(r => r.Slot)
+            .ThenInclude(s => s.SlotType)
+            .Include(r => r.User)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (reservation == null)
         {
@@ -49,7 +62,7 @@ public class ReservationsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,User,Slot,StartTimeslot,EndTimeslot,RoomType,Rooms")] Reservation reservation)
+    public async Task<IActionResult> Create([Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,Status")] Reservation reservation)
     {
         if (ModelState.IsValid)
         {
@@ -85,7 +98,7 @@ public class ReservationsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,User,Slot,StartTimeslot,EndTimeslot,RoomType,Rooms")] Reservation reservation)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,Status")] Reservation reservation)
     {
         if (id != reservation.Id)
         {
@@ -126,6 +139,12 @@ public class ReservationsController : Controller
         }
 
         var reservation = await _context.Reservations
+            .Include(r => r.StartTimeslot)
+            .Include(r => r.EndTimeslot)
+            .Include(r => r.RoomType)
+            .Include(r => r.Slot)
+            .ThenInclude(s => s.SlotType) // Include slot type AFTER slot included
+            .Include(r => r.User)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (reservation == null)
         {

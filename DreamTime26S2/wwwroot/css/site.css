@@ -128,3 +128,49 @@ body {
     content: '\F622'; /* cross glyph */
 }
 
+
+
+/*
+    Reservation status (table cells)
+*/
+
+.container .status-pending {
+    --color: #ff9900;
+    --icon: '\F5D4'; /* bi-three-dots */
+}
+
+.container .status-confirmed {
+    --color: #228855;
+    --icon: '\F272'; /* bi-check2 */
+}
+
+.container .status-inprogress {
+    --color: #1166ff;
+    --icon: '\F66B'; /* bi-activity */
+}
+
+.container .status-completed {
+    --color: #667777;
+    --icon: '\F26F'; /* bi-check2-all */
+}
+
+.container .status-cancelled {
+    --color: #dd3344;
+    --icon: '\F622'; /* bi-x-circle-fill */
+}
+
+/* Table styling */
+.container .status-td {
+    color: var(--color);
+    white-space: nowrap;
+}
+
+.container .status-td::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    vertical-align: middle;
+    content: var(--icon, '\F50C'); /* Load a Bootstrap Icon - default to bi-question */
+}
+
