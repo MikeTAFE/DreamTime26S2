@@ -63,6 +63,16 @@ namespace DreamTime26S2.Models
 
         public string? Notes { get; set; }
 
+        public ReservationStatus Status { get; set; }
+
+        public enum ReservationStatus
+        {
+            Pending = 0,
+            Confirmed = 1,
+            InProgress = 2,
+            Completed = 3,
+            Cancelled = 4,
+        }
 
 
         // Assocations (Navigation Properties)
