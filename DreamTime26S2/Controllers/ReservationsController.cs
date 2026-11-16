@@ -171,11 +171,18 @@ public class ReservationsController : Controller
         ViewData["EndTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", endTime);
         ViewData["RoomTypeList"] = new SelectList(_context.RoomTypes, "Id", "Name", roomTypeId);
 
-        // TODO: Display description for slot instead of ID
-        ViewData["SlotList"] = new SelectList(_context.Slots, "Id", "Id", slotId);
+        // Get a list of slots fomatted with DATE - SLOTTYPE (STARTTIME-ENDTIME)
+        //ViewData["SlotList"] = new SelectList(_context.Slots.Include(s => s.SlotType).Select(s => new
+        //{
+        //    Id = s.Id,
+        //    DisplayValue = $"{s.Date} - {s.SlotType.Name} ({s.StartTime}-{s.EndTime})",
+        //}), "Id", "DisplayValue", slotId);
 
-        // TODO: Display ordered list of users with full names
-        ViewData["UserList"] = new SelectList(_context.Users, "Id", "Id", userId);
+        // Get a list of slots using Slot.Description property
+        ViewData["SlotList"] = new SelectList(_context.Slots.Include(s => s.SlotType), "Id", "Description", slotId);
+
+        // Get an ordered list of users displaying full names
+        ViewData["UserList"] = new SelectList(_context.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName), "Id", "FullName", userId);
     }
 
     /// <param name="reservation">The Reservation object to use for default values</param>
