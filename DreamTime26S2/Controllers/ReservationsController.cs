@@ -93,6 +93,31 @@ public class ReservationsController : Controller
         return View(reservation);
     }
 
+    // GET: Reservations/Edit/5/Confirmed
+    // Allow easy status update via GET request
+    [HttpGet("{controller}/{action}/{id}/{status}")]
+    public async Task<IActionResult> Edit(int id, string status)
+    {
+        // Find a reservation
+        var reservation = await _context.Reservations.FindAsync(id);
+        if (reservation == null)
+            return NotFound("Reservation not found.");
+
+        // Validate status
+        if (!Enum.TryParse(status, out Reservation.ReservationStatus statusEnum))
+            return BadRequest("Invalid status.");
+
+        // Change the status
+        reservation.Status = statusEnum;
+
+        // Update the database
+        _context.Update(reservation);
+        await _context.SaveChangesAsync();
+
+        // Redirect to the Details view (pass through reservation ID)
+        return RedirectToAction(nameof(Details), new { id = id });
+    }
+
     // POST: Reservations/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

@@ -8,6 +8,21 @@
 
 <hr />
 
+@* Status buttons *@
+<div class="status-buttons">
+    @foreach (var status in Enum.GetValues<Reservation.ReservationStatus>())
+    {
+        string cssActive = Model.Status == status ? "active" : "";
+        <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-status="@status"
+           class="btn status-@status.ToString().ToLower() @cssActive"
+           title="Set status to @status">
+            @status
+        </a>
+    }
+</div>
+
+<hr />
+
 <div>
     <dl class="row">
         <dt class="col-sm-2">

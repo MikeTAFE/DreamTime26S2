@@ -174,3 +174,14 @@ body {
     content: var(--icon, '\F50C'); /* Load a Bootstrap Icon - default to bi-question */
 }
 
+/* Button styling */
+.container .status-buttons .btn {
+    border: 1px solid var(--color);
+    color: var(--color);
+    /* Style the status button if it has the "active" class */
+    &.active {
+        background-color: var(--color);
+        color: white;
+    }
+}
+
