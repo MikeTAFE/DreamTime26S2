@@ -53,7 +53,7 @@ namespace DreamTime26S2.Models
 
         [NotMapped]
         [DisplayName("Full Name")]
-        public string FullName { get => $"{FirstName} {LastName}"; }
+        public string FullName { get => $"{FirstName?.Trim()} {LastName?.Trim()}"; }
 
         [StringLength(256)]
         public string? Email { get; set; }
