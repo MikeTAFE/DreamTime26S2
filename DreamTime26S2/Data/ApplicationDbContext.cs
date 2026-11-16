@@ -15,6 +15,7 @@ namespace DreamTime26S2.Data
         public DbSet<Timeslot> Timeslots { get; set; }
         public DbSet<SlotType> SlotTypes { get; set; }
         public DbSet<Slot> Slots { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

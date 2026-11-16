@@ -17,12 +17,12 @@ namespace DreamTime26S2.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.13")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DreamTime26S2.Models.ApplicationUser", b =>
+            modelBuilder.Entity("DreamTime26S2.Data.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -164,6 +164,69 @@ namespace DreamTime26S2.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("DreamTime26S2.Models.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfPeople")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RoomTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SlotId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndTime");
+
+                    b.HasIndex("RoomTypeId");
+
+                    b.HasIndex("SlotId");
+
+                    b.HasIndex("StartTime");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Room", b =>
@@ -627,6 +690,21 @@ namespace DreamTime26S2.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ReservationRoom", b =>
+                {
+                    b.Property<int>("ReservationsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomsCode")
+                        .HasColumnType("nvarchar(5)");
+
+                    b.HasKey("ReservationsId", "RoomsCode");
+
+                    b.HasIndex("RoomsCode");
+
+                    b.ToTable("ReservationRoom");
+                });
+
             modelBuilder.Entity("DreamTime26S2.Models.Book", b =>
                 {
                     b.HasOne("DreamTime26S2.Models.Genre", "Genre")
@@ -636,6 +714,48 @@ namespace DreamTime26S2.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("DreamTime26S2.Models.Reservation", b =>
+                {
+                    b.HasOne("DreamTime26S2.Models.Timeslot", "EndTimeslot")
+                        .WithMany()
+                        .HasForeignKey("EndTime")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.RoomType", "RoomType")
+                        .WithMany()
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.Slot", "Slot")
+                        .WithMany()
+                        .HasForeignKey("SlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.Timeslot", "StartTimeslot")
+                        .WithMany()
+                        .HasForeignKey("StartTime")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("EndTimeslot");
+
+                    b.Navigation("RoomType");
+
+                    b.Navigation("Slot");
+
+                    b.Navigation("StartTimeslot");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Room", b =>
@@ -687,7 +807,7 @@ namespace DreamTime26S2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("DreamTime26S2.Models.ApplicationUser", null)
+                    b.HasOne("DreamTime26S2.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -696,7 +816,7 @@ namespace DreamTime26S2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("DreamTime26S2.Models.ApplicationUser", null)
+                    b.HasOne("DreamTime26S2.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -711,7 +831,7 @@ namespace DreamTime26S2.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DreamTime26S2.Models.ApplicationUser", null)
+                    b.HasOne("DreamTime26S2.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -720,9 +840,24 @@ namespace DreamTime26S2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("DreamTime26S2.Models.ApplicationUser", null)
+                    b.HasOne("DreamTime26S2.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ReservationRoom", b =>
+                {
+                    b.HasOne("DreamTime26S2.Models.Reservation", null)
+                        .WithMany()
+                        .HasForeignKey("ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DreamTime26S2.Models.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

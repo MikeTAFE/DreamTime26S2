@@ -23,5 +23,10 @@ namespace DreamTime26S2.Models
         // Associations (navigation properties)
         [DeleteBehavior(DeleteBehavior.Restrict)]  // Stop cascade delete
         public RoomType? RoomType { get; set; }
+
+
+        // Define a many-to-many relationship between Room and Reservation (check the Reservation model)
+        [DisplayName("Assigned Reservations")]
+        public ICollection<Reservation> Reservations { get; } = [];
     }
 }
