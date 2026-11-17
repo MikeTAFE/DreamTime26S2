@@ -10,7 +10,7 @@ namespace DreamTime26S2.Models
     {
         [Key]
         [DisplayName("Reservation No")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [StringLength(450)]
         [DisplayName("User")]
@@ -18,38 +18,38 @@ namespace DreamTime26S2.Models
 
         [Required]
         [DisplayName("Slot")]
-        public required int SlotId { get; set; }
+        public int SlotId { get; set; }
 
         [Required]
         [ForeignKey(nameof(StartTimeslot))]
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}")]
         [DisplayName("Start Time")]
-        public required TimeOnly StartTime { get; set; }
+        public TimeOnly StartTime { get; set; }
 
         [Required]
         [ForeignKey(nameof(EndTimeslot))]
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}")]
         [DisplayName("End Time")]
-        public required TimeOnly EndTime { get; set; }
+        public TimeOnly EndTime { get; set; }
 
         [Required]
         [DisplayName("Room Type")]
-        public required int RoomTypeId { get; set; }
+        public int RoomTypeId { get; set; }
 
         [Required]
         [Range(1, 500)]
         [DisplayName("Number of People")]
-        public required ushort NumberOfPeople { get; set; } = 1;
+        public ushort NumberOfPeople { get; set; } = 1;
 
         [Required]
         [DisplayName("First Name")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
-        public required string FirstName { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
 
         [Required]
         [DisplayName("Last Name")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be 2-50 characters")]
-        public required string LastName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
 
         [NotMapped]
         [DisplayName("Full Name")]

@@ -1,18 +1,22 @@
 using DreamTime26S2.Data;
 using DreamTime26S2.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 
 [Authorize(Roles = "Member, Staff, Manager")]
 public class ReservationsController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ReservationsController(ApplicationDbContext context)
+    public ReservationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     // GET: Reservations
@@ -54,10 +58,30 @@ public class ReservationsController : Controller
 
     // GET: Reservations/Create
     [AllowAnonymous]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        // Make empty reservation
+        Reservation reservation = new();
+
+        // Check if user is Member - prefill their contact details
+        if (User.IsInRole("Member"))
+        {
+            // Get ApplicationUser object from the UserManager (to access our custom properties)
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                // Attach contact details to the reservation
+                reservation.FirstName = user.FirstName;
+                reservation.LastName = user.LastName;
+                reservation.Email = user.Email;
+                reservation.Phone = user.PhoneNumber;
+            }
+        }
+
+        // Load the form with pre-filled data
         PopulateViewData();
-        return View();
+        return View(reservation);
     }
 
     // POST: Reservations/Create

@@ -145,7 +145,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Genre", b =>
@@ -163,7 +163,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Reservation", b =>
@@ -229,7 +229,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Room", b =>
@@ -245,7 +245,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
 
                     b.HasData(
                         new
@@ -333,7 +333,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomTypes");
+                    b.ToTable("RoomTypes", (string)null);
 
                     b.HasData(
                         new
@@ -387,7 +387,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("StartTime");
 
-                    b.ToTable("Slots");
+                    b.ToTable("Slots", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.SlotType", b =>
@@ -408,7 +408,7 @@ namespace DreamTime26S2.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("SlotTypes");
+                    b.ToTable("SlotTypes", (string)null);
 
                     b.HasData(
                         new
@@ -435,7 +435,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasKey("Time");
 
-                    b.ToTable("Timeslots");
+                    b.ToTable("Timeslots", (string)null);
 
                     b.HasData(
                         new
@@ -705,7 +705,7 @@ namespace DreamTime26S2.Data.Migrations
 
                     b.HasIndex("RoomsCode");
 
-                    b.ToTable("ReservationRoom");
+                    b.ToTable("ReservationRoom", (string)null);
                 });
 
             modelBuilder.Entity("DreamTime26S2.Models.Book", b =>
