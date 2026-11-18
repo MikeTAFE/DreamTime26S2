@@ -30,7 +30,22 @@ public class ReservationsController : Controller
             .Include(r => r.Slot)
             .ThenInclude(s => s.SlotType) // Include slot type AFTER slot included
             .Include(r => r.User);
-        return View(await data.ToListAsync());
+        
+        // Check if Member - ONLY display their own reservations
+        if (User.IsInRole("Member"))
+        {
+            // Get user ID for member
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Filter reservations
+            var filteredData = data.Where(r => r.UserId == userId);
+
+            // Load view for member reservation listing
+            return View("MemberIndex", await filteredData.OrderByDescending(r => r.Id).ToListAsync());
+        }
+        
+        // Load "default" staff/manager view
+        return View(await data.OrderByDescending(r => r.Slot.Date).ToListAsync());
     }
 
     // GET: Reservations/Details/5
