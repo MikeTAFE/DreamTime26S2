@@ -153,7 +153,7 @@ public class ReservationsController : Controller
 
     // GET: Reservations/Edit/5/Confirmed
     // Allow easy status update via GET request
-    [Authorize(Roles = "Staff, Manager")]
+    [Authorize(Roles = "Member, Staff, Manager")]
     [HttpGet("{controller}/{action}/{id}/{status}")]
     public async Task<IActionResult> Edit(int id, string status)
     {
@@ -166,12 +166,34 @@ public class ReservationsController : Controller
         if (!Enum.TryParse(status, out Reservation.ReservationStatus statusEnum))
             return BadRequest("Invalid status.");
 
+        // Restrict Member to only update "Cancelled" status for their own reservations
+        if (User.IsInRole("Member"))
+        {
+            // Get user ID for member
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (statusEnum != Reservation.ReservationStatus.Cancelled)
+                return BadRequest("Members can only cancel reservations.");
+
+            if (reservation.UserId != userId)
+                return BadRequest("Members can only edit their own reservations.");
+        }
+
         // Change the status
         reservation.Status = statusEnum;
 
         // Update the database
         _context.Update(reservation);
         await _context.SaveChangesAsync();
+
+        // Get the previous page/URL (from Referer HTTP header)
+        string referer = Request.Headers["Referer"].ToString();
+
+        // Redirect to previous URL if possible
+        if (!string.IsNullOrEmpty(referer))
+        {
+            return Redirect(referer);
+        }
 
         // Redirect to the Details view (pass through reservation ID)
         return RedirectToAction(nameof(Details), new { id = id });
