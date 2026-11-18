@@ -81,7 +81,7 @@ public class ReservationsController : Controller
         }
 
         // Load the form with pre-filled data
-        PopulateViewData();
+        await PopulateViewData();
         return View(reservation);
     }
 
@@ -113,7 +113,7 @@ public class ReservationsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        PopulateViewData(reservation);
+        await PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -132,7 +132,7 @@ public class ReservationsController : Controller
             return NotFound();
         }
 
-        PopulateViewData(reservation);
+        await PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -196,7 +196,7 @@ public class ReservationsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        PopulateViewData(reservation);
+        await PopulateViewData(reservation);
         return View(reservation);
     }
 
@@ -255,7 +255,7 @@ public class ReservationsController : Controller
     /// <param name="roomTypeId">Default value for the room type</param>
     /// <param name="slotId">Default value for the slot</param>
     /// <param name="userId">Default value for the user</param>
-    private void PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)
+    private async Task PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)
     {
         // TODO: Add OrderBy() to the lists
         ViewData["StartTimeList"] = new SelectList(_context.Timeslots, "Time", "Time", startTime);
@@ -274,18 +274,31 @@ public class ReservationsController : Controller
 
         // Get an ordered list of users displaying full names
         ViewData["UserList"] = new SelectList(_context.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName), "Id", "FullName", userId);
+
+        // Get list of members (no staff, managers, etc)
+        //var members = await _userManager.GetUsersInRoleAsync("Member");
+        var members = await (
+            from user in _context.Users
+                join userRole in _context.UserRoles on user.Id equals userRole.UserId
+                join role in _context.Roles on userRole.RoleId equals role.Id
+            where role.NormalizedName == "MEMBER"
+            select user
+        )
+        .AsNoTracking()  // Disable EF change tracking (good for read-only data to avoid overheads)
+        .ToListAsync();
+        ViewData["MemberList"] = new SelectList(members, "Id", "FullName", userId);
     }
 
     /// <param name="reservation">The Reservation object to use for default values</param>
     /// <inheritdoc cref="PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)" />
-    private void PopulateViewData(Reservation reservation)
+    private async Task PopulateViewData(Reservation reservation)
     {
-        PopulateViewData(reservation.StartTime, reservation.EndTime, reservation.RoomTypeId, reservation.SlotId, reservation.UserId);
+        await PopulateViewData(reservation.StartTime, reservation.EndTime, reservation.RoomTypeId, reservation.SlotId, reservation.UserId);
     }
 
     /// <inheritdoc cref="PopulateViewData(TimeOnly? startTime, TimeOnly? endTime, int? roomTypeId, int? slotId, string? userId)" />
-    private void PopulateViewData()
+    private async Task PopulateViewData()
     {
-        PopulateViewData(null, null, null, null, null);
+        await PopulateViewData(null, null, null, null, null);
     }
 }
