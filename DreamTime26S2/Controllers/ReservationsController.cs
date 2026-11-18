@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
+using System.Security.Claims;
 
 [Authorize(Roles = "Member, Staff, Manager")]
 public class ReservationsController : Controller
@@ -92,8 +93,21 @@ public class ReservationsController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Create([Bind("Id,UserId,SlotId,StartTime,EndTime,RoomTypeId,NumberOfPeople,FirstName,LastName,FullName,Email,Phone,Notes,Status")] Reservation reservation)
     {
+        // Assign "Pending" status by default
+        reservation.Status = Reservation.ReservationStatus.Pending;
+
         if (ModelState.IsValid)
         {
+            // Check if user is Member - assign UserId to Reservation
+            if (User != null && User.IsInRole("Member"))
+            {
+                // Get user ID for member and assign to reservation
+                reservation.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Alternative method using our injected UserManager
+                //reservation.UserId = _userManager.GetUserId(User);
+            }
+
             _context.Add(reservation);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
